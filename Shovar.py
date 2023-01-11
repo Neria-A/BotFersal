@@ -6,6 +6,7 @@ class Shovar:
         self.expiry_date = expiry_date
         self.is_used = is_used
 
+
     def for_mongo(self):
         return {"_id": self._id, "code": self.code, "amount": self.amount, "expiry_date": self.expiry_date, "is_used": self.is_used}
 
