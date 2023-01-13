@@ -6,8 +6,9 @@ def menu():
     barcode = (types.InlineKeyboardButton(text="קופון", callback_data="coupon"))
     scan = (types.InlineKeyboardButton(text="סרוק", callback_data="scan"))
     close = (types.InlineKeyboardButton(text="סגור", callback_data="close"))
+    check = (types.InlineKeyboardButton(text="בדיקה", callback_data="check"))
     markup.row(barcode, scan)
-    markup.row(close)
+    markup.row(close, check)
     return markup
 
 def coupon_menu():
