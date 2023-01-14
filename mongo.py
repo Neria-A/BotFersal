@@ -1,6 +1,12 @@
 # import MongoClient
 from pymongo import MongoClient
 import appSettings as appsec
+from ShovarFromMongo import ShovarFromMongo
+from Shovar import Shovar
+
+amounts = ['30.00', '40.00', '50.00', '100.00', '200.00']
+
+
 
 # Creating a client
 client = MongoClient(appsec.mongo_connection_string)
@@ -26,3 +32,21 @@ def update_db(shovar):
     myquery  = mycol.find_one({"_id": shovar.code})
     new_value = {"$set": {"is_used": True}}
     mycol.update_one(myquery, new_value)
+
+def check_how_much_money():
+    amounts_dict = {}
+    for amount in amounts:
+        amounts_dict[amount] = 0
+    for amount in amounts:
+        coupons = mycol.find({"amount": amount, "is_used": False})
+        for coupon in coupons:
+            new_shovar = convert_mongo_to_shovar(coupon)
+            amounts_dict[new_shovar.amount] = amounts_dict[new_shovar.amount] + 1
+    return amounts_dict
+
+
+
+def convert_mongo_to_shovar(barcode):
+    shovar = ShovarFromMongo.dict_to_shovar(barcode)
+    new_shovar = Shovar(shovar._id, shovar.code, shovar.amount, shovar.expiry_date, shovar.is_used)
+    return new_shovar

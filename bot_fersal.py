@@ -119,8 +119,15 @@ def handle_query(call):
         bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
 
     if (call.data.startswith("check")):
-        print(call.id)
         bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text="קופון כבר קיים")
+
+    if (call.data.startswith("how_much")):
+        result = mongo.check_how_much_money()
+        string = ""
+        cop = " קופונים של "
+        for key, value in result.items():
+            string += str(value) + cop + str(key) + "\n"
+        bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=string)
 
 
 def find_or_not(barcode, call, local_shovar, amount):
