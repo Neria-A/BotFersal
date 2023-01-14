@@ -1,15 +1,10 @@
 import telebot
 import appSettings as appSet
 import read_mail_ten_bis
-import read_mail_sibus
 import imaplib
 import move_mail_to_another_folder as mm
 import mongo
 import menu
-import time
-import json
-
-import use_or_not
 from ShovarFromMongo import ShovarFromMongo
 from Shovar import Shovar
 import generate_barcode
@@ -31,20 +26,20 @@ def scan_mail(call):
     ten_bis = read_mail_ten_bis.convert_ten_bis_mail_to_shovar(con)
     for shovar in ten_bis:
         if(mongo.check_if_exist(shovar.code)):
-           string += str(shovar.code) + "\n"
-        else:
             mongo.insert_to_mongo(shovar.for_mongo())
-    sibus = read_mail_sibus.convert_sibus_mail_to_shovar(con)
-    for barcode in sibus:
-        if (mongo.check_if_exist(barcode.code)):
-            string += str(barcode.code) + "\n"
         else:
-            mongo.insert_to_mongo(barcode.for_mongo())
+            string += str(shovar.code) + "\n"
+    # sibus = read_mail_sibus.convert_sibus_mail_to_shovar(con)
+    # for barcode in sibus:
+    #     if (mongo.check_if_exist(barcode.code)):
+    #         mongo.insert_to_mongo(barcode.for_mongo())
+    #     else:
+    #         string += str(barcode.code) + "\n"
     if len(string) > str_len:
         string += "כבר קיימים"
         bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=string)
+    mm.move_mail_to_another_folder(con)
 
-    ##mm.move_mail_to_another_folder(con)
 
 @bot.message_handler(commands=['תפריט'])
 def handle_command_adminwindow(message):
@@ -86,10 +81,6 @@ def handle_query(call):
         find_or_not(barcode, call, local_shovar, 30)
 
     if (call.data.startswith("Used")):
-        if call.message.chat.id in message_ids.keys():
-            message_ids[call.message.chat.id].append(call.message.message_id)
-        else:
-            message_ids[call.message.chat.id] = [call.message.message_id]
         if(global_shovar[:1] != None):
             mongo.update_db(global_shovar[0])
             global_shovar.clear()
@@ -97,10 +88,6 @@ def handle_query(call):
         delete_barcode_message(call)
 
     if (call.data.startswith("Not Used")):
-        if call.message.chat.id in message_ids.keys():
-            message_ids[call.message.chat.id].append(call.message.message_id)
-        else:
-            message_ids[call.message.chat.id] = [call.message.message_id]
         if (global_shovar[:1] != None):
             global_shovar.clear()
         delete_message(call, call.message.message_id)
@@ -146,7 +133,7 @@ def find_or_not(barcode, call, local_shovar, amount):
 #TODO move to functions
 def convert_mongo_to_shovar(barcode):
     shovar = ShovarFromMongo.dict_to_shovar(barcode)
-    new_shovar = Shovar(shovar._id, shovar.code, shovar.amount, shovar.expiry_date, shovar.is_used)
+    new_shovar = Shovar(shovar._id, shovar.code, shovar.amount, shovar.expiry_date, shovar.is_used, shovar.date_added, shovar.date_used)
     return new_shovar
 
 

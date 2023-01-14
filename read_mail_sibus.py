@@ -36,7 +36,7 @@ def convert_sibus_mail_to_shovar(con):
         any((amount := substring) in s for substring in amounts)
 
         #list of shovarim
-        new_shovar = Shovar.Shovar(bar_code, bar_code, amount, date_for_mongo, False)
+        new_shovar = Shovar.Shovar(bar_code, bar_code, amount, date_for_mongo, False, datetime.now(), date_for_mongo)
         shovarim.append(new_shovar)
 
     return shovarim

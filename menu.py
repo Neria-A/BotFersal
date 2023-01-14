@@ -1,5 +1,4 @@
 from telebot import types
-import mongo
 
 def menu():
     markup = types.InlineKeyboardMarkup()

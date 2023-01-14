@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import appSettings as appsec
 from ShovarFromMongo import ShovarFromMongo
 from Shovar import Shovar
+import datetime
 
 amounts = ['30.00', '40.00', '50.00', '100.00', '200.00']
 
@@ -30,7 +31,7 @@ def find_barcode(amount):
 
 def update_db(shovar):
     myquery  = mycol.find_one({"_id": shovar.code})
-    new_value = {"$set": {"is_used": True}}
+    new_value = {"$set": {"is_used": True, "date_used": datetime.datetime.now()}}
     mycol.update_one(myquery, new_value)
 
 def check_how_much_money():
@@ -55,5 +56,5 @@ def coupons_sum(amounts):
 
 def convert_mongo_to_shovar(barcode):
     shovar = ShovarFromMongo.dict_to_shovar(barcode)
-    new_shovar = Shovar(shovar._id, shovar.code, shovar.amount, shovar.expiry_date, shovar.is_used)
+    new_shovar = Shovar(shovar._id, shovar.code, shovar.amount, shovar.expiry_date, shovar.is_used, shovar.date_added, shovar.date_used)
     return new_shovar

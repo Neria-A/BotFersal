@@ -1,7 +1,7 @@
 from datetime import datetime
 import appSettings as appSet
 import Shovar
-import email, re
+import re
 
 
 
@@ -13,14 +13,15 @@ def convert_ten_bis_mail_to_shovar(con):
 
     for msg in msgs:
         s = ''.join(str(x) for x in msg)
-
         new_string = " ".join(str(x) for x in msg)
 
         # looking for the barcode
         number_length = 20
         pattern = r"\D(\d{%d})\D" % number_length
         result = re.findall(pattern, s)
-        bar_code = " ".join(result)
+        bar_code = max(result)
+
+        #bar_code = " ".join(code)
 
         # find date
         cut_string = new_string.split(bar_code, 1)[1]
@@ -32,7 +33,7 @@ def convert_ten_bis_mail_to_shovar(con):
         any((amount := substring) in s for substring in amounts)
 
         #list of shovarim
-        new_shovar = Shovar.Shovar(bar_code, bar_code, amount, date_for_mongo, False)
+        new_shovar = Shovar.Shovar(bar_code, bar_code, amount, date_for_mongo, False, datetime.now(), date_for_mongo)
         shovarim.append(new_shovar)
 
 
