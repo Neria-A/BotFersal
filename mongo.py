@@ -21,3 +21,8 @@ def find_barcode(amount):
         return None
     else:
         return result
+
+def update_db(shovar):
+    myquery  = mycol.find_one({"_id": shovar.code})
+    new_value = {"$set": {"is_used": True}}
+    mycol.update_one(myquery, new_value)

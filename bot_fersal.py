@@ -8,6 +8,8 @@ import mongo
 import menu
 import time
 import json
+
+import use_or_not
 from ShovarFromMongo import ShovarFromMongo
 from Shovar import Shovar
 import generate_barcode
@@ -19,8 +21,10 @@ con.login(appSet.user, appSet.password)
 
 bot = telebot.TeleBot(appSet.botToken)
 
+message_ids = {}
+global_shovar = []
+
 def scan_mail(call):
-    message_ids = {}
     ten_bis = read_mail_ten_bis.convert_ten_bis_mail_to_shovar(con)
     for shovar in ten_bis:
         if(mongo.check_if_exist(shovar.code)):
@@ -58,6 +62,7 @@ def handle_command_adminwindow(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def handle_query(call):
+    local_shovar = []
     if (call.data.startswith("coupon")):
         bot.edit_message_text(chat_id=call.message.chat.id,
                          text="בחר סכום",
@@ -70,45 +75,38 @@ def handle_query(call):
 
     if (call.data.startswith("two_hundred")):
         barcode = mongo.find_barcode("200.00")
-        if None == barcode:
-            bot.reply_to(call.message, "לא קיים קופון בסכום הזה")
-        else:
-            new_shovar = convert_mongo_to_shovar(barcode)
-            new_file = generate_barcode.generate_barcode(new_shovar.code)
-            bot.send_photo(chat_id=call.message.chat.id, photo=new_file)
+        find_or_not(barcode, call, local_shovar, 200)
     if (call.data.startswith("hundred")):
         barcode = mongo.find_barcode("100.00")
-        if None == barcode:
-            bot.reply_to(call.message, "לא קיים קופון בסכום הזה")
-        else:
-            new_shovar = convert_mongo_to_shovar(barcode)
-            new_file = generate_barcode.generate_barcode(new_shovar.code)
-            bot.send_photo(chat_id=call.message.chat.id, photo=new_file)
+        find_or_not(barcode, call, local_shovar, 100)
     if (call.data.startswith("fifty")):
         barcode = mongo.find_barcode("50.00")
-        if None == barcode:
-            bot.reply_to(call.message, "לא קיים קופון בסכום הזה")
-        else:
-            new_shovar = convert_mongo_to_shovar(barcode)
-            new_file = generate_barcode.generate_barcode(new_shovar.code)
-            bot.send_photo(chat_id=call.message.chat.id, photo=new_file)
+        find_or_not(barcode, call, local_shovar, 50)
     if (call.data.startswith("forty")):
         barcode = mongo.find_barcode("40.00")
-        if None == barcode:
-            bot.reply_to(call.message, "לא קיים קופון בסכום הזה")
-        else:
-            new_shovar = convert_mongo_to_shovar(barcode)
-            new_file = generate_barcode.generate_barcode(new_shovar.code)
-            bot.send_photo(chat_id=call.message.chat.id, photo=new_file)
+        find_or_not(barcode, call, local_shovar, 40)
     if (call.data.startswith("thirty")):
         barcode = mongo.find_barcode("30.00")
-        if None == barcode:
-            bot.reply_to(call.message, "לא קיים קופון בסכום הזה")
-        else:
-            new_shovar = convert_mongo_to_shovar(barcode)
-            new_file = generate_barcode.generate_barcode(new_shovar.code)
-            bot.send_photo(chat_id=call.message.chat.id, photo=new_file)
+        find_or_not(barcode, call, local_shovar, 30)
 
+    if (call.data.startswith("Used")):
+        if call.message.chat.id in message_ids.keys():
+            message_ids[call.message.chat.id].append(call.message.message_id)
+        else:
+            message_ids[call.message.chat.id] = [call.message.message_id]
+        if(global_shovar[:1] != None):
+            mongo.update_db(global_shovar[0])
+            global_shovar.clear()
+        delete_messages(call)
+
+    if (call.data.startswith("Not Used")):
+        if call.message.chat.id in message_ids.keys():
+            message_ids[call.message.chat.id].append(call.message.message_id)
+        else:
+            message_ids[call.message.chat.id] = [call.message.message_id]
+        if (global_shovar[:1] != None):
+            global_shovar.clear()
+        delete_messages(call)
 
     if (call.data.startswith("Back")):
         bot.edit_message_text(chat_id=call.message.chat.id,
@@ -125,11 +123,35 @@ def handle_query(call):
         bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text="קופון כבר קיים")
 
 
+def find_or_not(barcode, call, local_shovar, amount):
+    if None == barcode:
+        bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f"לא קיים קופון על סך {amount}₪")
+    else:
+        local_shovar.append(convert_mongo_to_shovar(barcode))
+        global_shovar.append(local_shovar[0])
+        new_file = generate_barcode.generate_barcode(local_shovar[0].code)
+        message_id = bot.send_photo(chat_id=call.message.chat.id, photo=new_file).message_id
+        if call.message.chat.id in message_ids.keys():
+            message_ids[call.message.chat.id].append(message_id)
+        else:
+            message_ids[call.message.chat.id] = [message_id]
+        menu.use_or_not(bot, call)
+
+
 #TODO move to functions
 def convert_mongo_to_shovar(barcode):
     shovar = ShovarFromMongo.dict_to_shovar(barcode)
     new_shovar = Shovar(shovar._id, shovar.code, shovar.amount, shovar.expiry_date, shovar.is_used)
     return new_shovar
+
+
+def delete_messages(call):
+    for message_id in message_ids[call.message.chat.id]:
+        bot.delete_message(call.message.chat.id, message_id)
+    message_ids.clear()
+
+def delete_message(call, message_id):
+    bot.delete_message(call.message.chat.id, message_id)
 
 
 bot.infinity_polling()
