@@ -44,6 +44,13 @@ def check_how_much_money():
             amounts_dict[new_shovar.amount] = amounts_dict[new_shovar.amount] + 1
     return amounts_dict
 
+def coupons_sum(amounts):
+    sum = 0
+    for key, value in amounts.items():
+        for _ in range(value):
+            sum += float(key)
+    return sum
+
 
 
 def convert_mongo_to_shovar(barcode):
