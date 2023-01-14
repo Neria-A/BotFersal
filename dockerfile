@@ -16,6 +16,7 @@ RUN pip3 install --upgrade pip
 RUN pip3 install -r /home/ubuntu/BotFersal/requirements.txt
 RUN pip3 install pyTelegramBotAPI
 RUN pip3 install pymongo
+RUN pip3 install python-barcode
 
 ENV PYTHONPATH /home/ubuntu//BotFersal
 
