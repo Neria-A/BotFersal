@@ -44,7 +44,6 @@ pymongo==4.3.3
 pyparsing==2.4.7
 pyTelegramBotAPI==4.8.0
 pytesseract==0.3.10
-python-apt==2.3.0+ubuntu2.1
 python-barcode==0.14.0
 python-dateutil==2.8.2
 pyvips==2.2.1
