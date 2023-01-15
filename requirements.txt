@@ -52,7 +52,6 @@ pyzbar==0.1.9
 requests==2.28.1
 SecretStorage==3.3.1
 six==1.16.0
-ubuntu-advantage-tools==27.11.3
 ufw==0.36.1
 unattended-upgrades==0.1
 urllib3==1.26.13
