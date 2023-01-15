@@ -1,6 +1,5 @@
 import telebot
 import appSettings as appSet
-import imaplib
 import mongo
 import menu
 from ShovarFromMongo import ShovarFromMongo
@@ -9,10 +8,6 @@ import generate_barcode
 import tenbis_report
 import time
 
-
-
-con = imaplib.IMAP4_SSL(appSet.imap_url, 993)
-con.login(appSet.user, appSet.password)
 
 bot = telebot.TeleBot(appSet.botToken)
 
