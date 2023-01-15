@@ -12,11 +12,11 @@ def menu():
 
 def coupon_menu(result):
     markup = types.InlineKeyboardMarkup()
-    two_hundred = (types.InlineKeyboardButton(text="200" + " x " + str(result.get("200.00")), callback_data="two_hundred"))
-    hundred = (types.InlineKeyboardButton(text="100" + " x " + str(result.get("100.00")), callback_data="hundred"))
-    fifty = (types.InlineKeyboardButton(text="50" + " x " + str(result.get("50.00")), callback_data="fifty"))
-    forty = (types.InlineKeyboardButton(text="40" + " x " + str(result.get("40.00")), callback_data="forty"))
-    thirty = (types.InlineKeyboardButton(text="30"  + " x " + str(result.get("30.00")), callback_data="thirty"))
+    two_hundred = (types.InlineKeyboardButton(text="200" + " x " + str(result.get("200")), callback_data="two_hundred"))
+    hundred = (types.InlineKeyboardButton(text="100" + " x " + str(result.get("100")), callback_data="hundred"))
+    fifty = (types.InlineKeyboardButton(text="50" + " x " + str(result.get("50")), callback_data="fifty"))
+    forty = (types.InlineKeyboardButton(text="40" + " x " + str(result.get("40")), callback_data="forty"))
+    thirty = (types.InlineKeyboardButton(text="30"  + " x " + str(result.get("30")), callback_data="thirty"))
     back = (types.InlineKeyboardButton(text="חזור", callback_data="Back"))
     refresh = (types.InlineKeyboardButton(text="רענן קופונים", callback_data="refresh"))
     markup.row(two_hundred, hundred)

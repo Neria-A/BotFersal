@@ -1,13 +1,13 @@
 import telebot
 import appSettings as appSet
-import read_mail_ten_bis
 import imaplib
-import move_mail_to_another_folder as mm
 import mongo
 import menu
 from ShovarFromMongo import ShovarFromMongo
 from Shovar import Shovar
 import generate_barcode
+import tenbis_report
+import time
 
 
 
@@ -20,25 +20,43 @@ message_ids = {}
 barcode_ids = {}
 global_shovar = []
 
-def scan_mail(call):
+def ten_bis_api(call):
+    sent_msg = bot.send_message(call.message.chat.id, "הכנס SMS")
+    (email, headers, resp_json, session) = tenbis_report.auth_tenbis()
+    if (email, headers, resp_json, session) == None:
+        time.sleep(3)
+        delete_message(call, sent_msg.message_id)
+        delete_message(call, sent_msg.from_user.id)
+        temp = bot.send_message(call.message.chat.id, "נתונים שגויים")
+        time.sleep(5)
+        delete_message(call, temp.message_id)
+    else:
+        time.sleep(3)
+        delete_message(call, sent_msg.message_id)
+        bot.register_next_step_handler(sent_msg, otp_handler, email, headers, resp_json, session, call)
+
+def otp_handler(call, email, headers, resp_json, session, original_call):
+    otp = call.text
+    delete_message(original_call, call.id)
     string = "הקופונים:" + "\n"
     str_len = len(string)
-    ten_bis = read_mail_ten_bis.convert_ten_bis_mail_to_shovar(con)
-    for shovar in ten_bis:
-        if(mongo.check_if_exist(shovar.code)):
-            mongo.insert_to_mongo(shovar.for_mongo())
-        else:
-            string += str(shovar.code) + "\n"
-    # sibus = read_mail_sibus.convert_sibus_mail_to_shovar(con)
-    # for barcode in sibus:
-    #     if (mongo.check_if_exist(barcode.code)):
-    #         mongo.insert_to_mongo(barcode.for_mongo())
-    #     else:
-    #         string += str(barcode.code) + "\n"
-    if len(string) > str_len:
-        string += "כבר קיימים"
-        bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=string)
-    mm.move_mail_to_another_folder(con)
+    if otp.isdigit() and len(otp) == 5:
+        session = tenbis_report.auth_otp(email, headers, resp_json, session, otp)
+        ten_bis = tenbis_report.main_procedure(session)
+        for shovar in ten_bis:
+            if (not mongo.check_if_exist(shovar.code)):
+                mongo.insert_to_mongo(shovar.for_mongo())
+            else:
+                string += str(shovar.code) + "\n"
+        if len(string) > str_len:
+            string += "כבר קיימים"
+            temp = bot.send_message(original_call.message.chat.id, string)
+            time.sleep(5)
+            delete_message(original_call, temp.message_id)
+    else:
+        temp = bot.send_message(original_call.message.chat.id, "קוד לא תקין, לחץ 'סרוק' שוב")
+        time.sleep(5)
+        delete_message(original_call, temp.message_id)
 
 
 @bot.message_handler(commands=['תפריט'])
@@ -62,22 +80,22 @@ def handle_query(call):
                          parse_mode='HTML')
 
     if (call.data.startswith("scan")):
-        scan_mail(call)
+        ten_bis_api(call)
 
     if (call.data.startswith("two_hundred")):
-        barcode = mongo.find_barcode("200.00")
+        barcode = mongo.find_barcode("200")
         find_or_not(barcode, call, local_shovar, 200)
     if (call.data.startswith("hundred")):
-        barcode = mongo.find_barcode("100.00")
+        barcode = mongo.find_barcode("100")
         find_or_not(barcode, call, local_shovar, 100)
     if (call.data.startswith("fifty")):
-        barcode = mongo.find_barcode("50.00")
+        barcode = mongo.find_barcode("50")
         find_or_not(barcode, call, local_shovar, 50)
     if (call.data.startswith("forty")):
-        barcode = mongo.find_barcode("40.00")
+        barcode = mongo.find_barcode("40")
         find_or_not(barcode, call, local_shovar, 40)
     if (call.data.startswith("thirty")):
-        barcode = mongo.find_barcode("30.00")
+        barcode = mongo.find_barcode("30")
         find_or_not(barcode, call, local_shovar, 30)
 
     if (call.data.startswith("Used")):

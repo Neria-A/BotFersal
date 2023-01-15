@@ -5,7 +5,7 @@ from ShovarFromMongo import ShovarFromMongo
 from Shovar import Shovar
 import datetime
 
-amounts = ['30.00', '40.00', '50.00', '100.00', '200.00']
+amounts = ['30', '40', '50', '100', '200']
 
 
 
