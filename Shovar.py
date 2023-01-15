@@ -1,6 +1,3 @@
-import datetime
-
-
 class Shovar:
 
     def __init__(self, _id, code, amount, expiry_date, is_used, date_added, date_used):
