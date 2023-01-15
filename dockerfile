@@ -12,6 +12,7 @@ COPY *.py ./
 WORKDIR /home/ubuntu/BotFersal
 RUN apt-get update
 RUN apt-get -y install cron
+RUN pip3 install --upgrade setuptools
 RUN pip3 install --upgrade pip
 RUN pip3 install pyTelegramBotAPI
 RUN pip3 install pymongo
