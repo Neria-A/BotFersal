@@ -39,7 +39,7 @@ def otp_handler(call, email, headers, resp_json, session, original_call):
         session = tenbis_report.auth_otp(email, headers, resp_json, session, otp)
         ten_bis = tenbis_report.main_procedure(session)
         for shovar in ten_bis:
-            if (not mongo.check_if_exist(shovar.code)):
+            if (mongo.check_if_exist(shovar.code)):
                 mongo.insert_to_mongo(shovar.for_mongo())
             else:
                 string += str(shovar.code) + "\n"
