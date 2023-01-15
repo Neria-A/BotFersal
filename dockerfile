@@ -7,7 +7,7 @@ LABEL Maintainer="neria.amsalem"
 
 WORKDIR /home/ubuntu/BotFersal
 
-COPY *.py requirements.txt ./
+COPY *.py ./
 
 WORKDIR /home/ubuntu/BotFersal
 RUN apt-get update
