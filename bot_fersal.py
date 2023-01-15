@@ -33,19 +33,26 @@ def ten_bis_api(call):
 def otp_handler(call, email, headers, resp_json, session, original_call):
     otp = call.text
     delete_message(original_call, call.id)
+    count = 0
     string = "הקופונים:" + "\n"
     str_len = len(string)
     if otp.isdigit() and len(otp) == 5:
         session = tenbis_report.auth_otp(email, headers, resp_json, session, otp)
         ten_bis = tenbis_report.main_procedure(session)
         for shovar in ten_bis:
-            if (mongo.check_if_exist(shovar.code)):
+            if mongo.check_if_exist(shovar.code) == None:
+                count += 1
                 mongo.insert_to_mongo(shovar.for_mongo())
             else:
+                print(mongo.check_if_exist(shovar.code))
                 string += str(shovar.code) + "\n"
         if len(string) > str_len:
             string += "כבר קיימים"
             temp = bot.send_message(original_call.message.chat.id, string)
+            time.sleep(5)
+            delete_message(original_call, temp.message_id)
+        elif count > 0:
+            temp = bot.send_message(original_call.message.chat.id, f"נוספו {count} חדשים")
             time.sleep(5)
             delete_message(original_call, temp.message_id)
     else:

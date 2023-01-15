@@ -20,7 +20,7 @@ def insert_to_mongo(code):
     mycol.insert_one(code)
 
 def check_if_exist(message):
-    return mycol.find_one({"code": message})
+    return mycol.find_one({"_id": message})
 
 def find_barcode(amount):
     result = mycol.find_one({"amount": amount, "is_used": False})
