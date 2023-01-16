@@ -16,7 +16,7 @@ barcode_ids = {}
 global_shovar = []
 
 def ten_bis_api(call):
-    sent_msg = bot.send_message(call.message.chat.id, "הכנס SMS")
+    sent_msg = bot.send_message(call.message.chat.id, "הכנס/י את קוד האימות שלך")
     (email, headers, resp_json, session) = tenbis_report.auth_tenbis()
     if (email, headers, resp_json, session) == None:
         time.sleep(3)
@@ -34,29 +34,36 @@ def otp_handler(call, email, headers, resp_json, session, original_call):
     otp = call.text
     delete_message(original_call, call.id)
     count = 0
+    amount = 0
     string = "הקופונים:" + "\n"
     str_len = len(string)
     if otp.isdigit() and len(otp) == 5:
+        scanning_message = bot.send_message(original_call.message.chat.id, "סורק...")
         session = tenbis_report.auth_otp(email, headers, resp_json, session, otp)
         ten_bis = tenbis_report.main_procedure(session)
         for shovar in ten_bis:
             if mongo.check_if_exist(shovar.code) == None:
                 count += 1
+                amount += int(shovar.amount)
                 mongo.insert_to_mongo(shovar.for_mongo())
             else:
-                print(mongo.check_if_exist(shovar.code))
                 string += str(shovar.code) + "\n"
+        delete_message(original_call, scanning_message.message_id)
+        finish = bot.send_message(original_call.message.chat.id, "סיימתי")
+        time.sleep(2)
+        delete_message(original_call, finish.message_id)
+
         if len(string) > str_len:
             string += "כבר קיימים"
             temp = bot.send_message(original_call.message.chat.id, string)
             time.sleep(5)
             delete_message(original_call, temp.message_id)
-        elif count > 0:
-            temp = bot.send_message(original_call.message.chat.id, f"נוספו {count} חדשים")
+        if count > 0:
+            temp = bot.send_message(original_call.message.chat.id, f"נוספו {count} קופונים חדשים על סך {amount}₪")
             time.sleep(5)
             delete_message(original_call, temp.message_id)
     else:
-        temp = bot.send_message(original_call.message.chat.id, "קוד לא תקין, לחץ 'סרוק' שוב")
+        temp = bot.send_message(original_call.message.chat.id, "קוד לא תקין, נא ללחוץ 'סרוק' שוב")
         time.sleep(5)
         delete_message(original_call, temp.message_id)
 
