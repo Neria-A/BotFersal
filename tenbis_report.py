@@ -1,12 +1,12 @@
-import requests
+import re
 import os
+import json
 import pickle
 import urllib3
-import json
-from datetime import date
-import re
+import requests
 import appSettings
 from Shovar import Shovar
+from datetime import date
 from datetime import datetime
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -121,33 +121,9 @@ def main_procedure(session):
         return None
 
 
-
-def input_number(message):
-    while True:
-        try:
-            userInput = int(input(message))
-        except ValueError:
-            print("Not an integer! Try again. (examples: 1,2,3,4,5)")
-            continue
-        else:
-            return userInput
-            break
-
-
-def write_file(path, content):
-    with open(path, 'w', encoding='utf-8') as f:
-        f.write(content)
-
-
 def create_pickle(obj, path):
     with open(path, 'wb') as session_file:
         pickle.dump(obj, session_file)
-
-
-def load_pickle(path):
-    with open(path, 'rb') as session_file:
-        objfrompickle = pickle.load(session_file)
-        return objfrompickle
 
 
 def get_report_for_month(session, month):
@@ -155,10 +131,6 @@ def get_report_for_month(session, month):
     payload = {"culture": "he-IL", "uiCulture": "he", "dateBias": month}
     headers = {"content-type": "application/json", "user-token": session.user_token}
     response = session.post(endpoint, data=json.dumps(payload), headers=headers, verify=False)
-
-    if (DEBUG):
-        print(endpoint + "\r\n" + str(response.status_code) + "\r\n" + response.text)
-
     resp_json = json.loads(response.text)
     all_orders = resp_json['Data']['orderList']
     barcode_orders = [x for x in all_orders if x['isBarCodeOrder'] == True]
@@ -171,8 +143,6 @@ def get_barcode_order_info(session, order_id, res_id):
     headers = {"content-type": "application/json"}
     headers.update({'user-token': session.user_token})
     response = session.get(endpoint, headers=headers, verify=False)
-    if (DEBUG):
-        print(endpoint + "\r\n" + str(response.status_code) + "\r\n" + response.text)
     resp_json = json.loads(response.text)
     used = resp_json['Data']['Vouchers'][0]['Used']
 
@@ -188,26 +158,18 @@ def get_barcode_order_info(session, order_id, res_id):
 
 
 def auth_tenbis():
-    # Phase one -> Email
     email = appSettings.ten_bis_mail
     endpoint = TENBIS_FQDN + "/NextApi/GetUserAuthenticationDataAndSendAuthenticationCodeToUser"
-
     payload = {"culture": "he-IL", "uiCulture": "he", "email": email}
     headers = {"content-type": "application/json"}
     session = requests.session()
-
     response = session.post(endpoint, data=json.dumps(payload), headers=headers, verify=False)
     resp_json = json.loads(response.text)
 
-    if (DEBUG):
-        print(endpoint + "\r\n" + str(response.status_code) + "\r\n" + response.text)
-
-    if (200 <= response.status_code <= 210):
-        return (email, headers, resp_json, session)
+    if 200 <= response.status_code <= 210:
+        return email, headers, resp_json, session
     else:
         return None
-
-    # Phase two -> OTP
 
 
 def auth_otp(email, headers, resp_json, session, otp):
@@ -226,8 +188,6 @@ def auth_otp(email, headers, resp_json, session, otp):
     user_token = resp_json['Data']['userToken']
     create_pickle(user_token, TOKEN_PATH)
     session.user_token = user_token
-    if (DEBUG):
-        print(endpoint + "\r\n" + str(response.status_code) + "\r\n" + response.text)
-        print(session)
+
     return session
 

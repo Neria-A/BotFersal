@@ -1,14 +1,15 @@
 from telebot import types
 
+
 def menu():
     markup = types.InlineKeyboardMarkup()
-
     barcode = (types.InlineKeyboardButton(text="קופונים", callback_data="coupon"))
     scan = (types.InlineKeyboardButton(text="סרוק", callback_data="scan"))
     close = (types.InlineKeyboardButton(text="סגור", callback_data="close"))
     markup.row(barcode, scan)
     markup.row(close)
     return markup
+
 
 def coupon_menu(result):
     markup = types.InlineKeyboardMarkup()
@@ -25,16 +26,17 @@ def coupon_menu(result):
     markup.row(back)
     return markup
 
-def yes_or_not():
-    markup = types.InlineKeyboardMarkup()
 
+def yes_or_no():
+    markup = types.InlineKeyboardMarkup()
     yes = (types.InlineKeyboardButton(text="כן, השתמשתי", callback_data="Used"))
     no = (types.InlineKeyboardButton(text="לא", callback_data="Not Used"))
     markup.row(no, yes)
     return markup
 
+
 def use_or_not(bot, call):
     bot.send_message(chat_id=call.message.chat.id,
-                          text="האם השתמשת בקופון?",
-                          reply_markup=yes_or_not(),
-                          parse_mode='HTML')
+                     text="האם השתמשת בקופון?",
+                     reply_markup=yes_or_no(),
+                     parse_mode='HTML')
