@@ -57,7 +57,7 @@ def coupons_sum(coupons):
 
 def convert_mongo_to_shovar(barcode):
     shovar = ShovarFromMongo.dict_to_shovar(barcode)
-    new_shovar = Shovar(shovar.id,
+    new_shovar = Shovar(shovar._id,
                         shovar.code,
                         shovar.amount,
                         shovar.expiry_date,
