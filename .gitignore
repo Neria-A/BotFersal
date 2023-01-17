@@ -2,3 +2,4 @@ appSettings.py
 *.png
 usertoken.pickle
 sessions.pickle
+dockerfile
