@@ -33,7 +33,7 @@ def handle_query(call):
         result = mongo.check_how_much_money()
         coupon_sum = mongo.coupons_sum(result)
         bot.edit_message_text(chat_id=call.message.chat.id,
-                              text="סה''כ בקופונים: " + str(coupon_sum),
+                              text="סה''כ כסף בשוברים: " + str(coupon_sum) + "₪",
                               message_id=call.message.message_id,
                               reply_markup=menu.coupon_menu(result),
                               parse_mode='HTML')
@@ -75,7 +75,7 @@ def handle_query(call):
         result = mongo.check_how_much_money()
         coupon_sum = mongo.coupons_sum(result)
         bot.edit_message_text(chat_id=call.message.chat.id,
-                              text="סה''כ בקופונים: " + str(coupon_sum),
+                              text="סה''כ כסף בשוברים: " + str(coupon_sum) + "₪",
                               message_id=call.message.message_id,
                               reply_markup=menu.coupon_menu(result),
                               parse_mode='HTML')
@@ -85,7 +85,7 @@ def handle_query(call):
 
 def find_or_not(barcode, call, local_shovar, amount):
     if None == barcode:
-        bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f"לא קיים קופון על סך {amount}₪")
+        bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f"לא קיים שובר על סך {amount}₪")
     else:
         local_shovar.append(convert_mongo_to_shovar(barcode))
         global_shovar.append(local_shovar[0])
@@ -122,7 +122,7 @@ def delete_barcode_message(call):
     barcode_ids.clear()
 
 def ten_bis_api(call):
-    sent_msg = bot.send_message(call.message.chat.id, "הכנס/י את קוד האימות שלך")
+    sent_msg = bot.send_message(call.message.chat.id, "יש להכניס את קוד האימות שקיבלת כעת")
     (email, headers, resp_json, session) = tenbis_report.auth_tenbis()
     if (email, headers, resp_json, session) == None:
         time.sleep(3)
@@ -142,7 +142,7 @@ def otp_handler(call, email, headers, resp_json, session, original_call):
     delete_message(original_call, call.id)
     count = 0
     amount = 0
-    string = "הקופונים:" + "\n"
+    string = "מתוך השוברים שסרקתי, השוברים הבאים כבר שמורים אצלי:" + "\n"
     str_len = len(string)
     if otp.isdigit() and len(otp) == 5:
         scanning_message = bot.send_message(original_call.message.chat.id, "סורק...")
@@ -156,21 +156,20 @@ def otp_handler(call, email, headers, resp_json, session, original_call):
             else:
                 string += str(shovar.code) + "\n"
         delete_message(original_call, scanning_message.message_id)
-        finish = bot.send_message(original_call.message.chat.id, "סיימתי")
+        finish = bot.send_message(original_call.message.chat.id, "סיימתי 😁")
         time.sleep(2)
         delete_message(original_call, finish.message_id)
 
         if len(string) > str_len:
-            string += "כבר קיימים"
             temp = bot.send_message(original_call.message.chat.id, string)
             time.sleep(5)
             delete_message(original_call, temp.message_id)
         if count > 0:
-            temp = bot.send_message(original_call.message.chat.id, f"נוספו {count} קופונים חדשים על סך {amount}₪")
+            temp = bot.send_message(original_call.message.chat.id, f"נוספו {count} שוברים חדשים על סך {amount}₪")
             time.sleep(5)
             delete_message(original_call, temp.message_id)
     else:
-        temp = bot.send_message(original_call.message.chat.id, "קוד לא תקין, נא ללחוץ 'סרוק' שוב")
+        temp = bot.send_message(original_call.message.chat.id, "קוד לא תקין, נא ללחוץ על 'סריקה' שוב")
         time.sleep(5)
         delete_message(original_call, temp.message_id)
 

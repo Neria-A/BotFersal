@@ -11,92 +11,12 @@ from datetime import datetime
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 CWD = os.getcwd()
-SESSION_PATH = f"{CWD}/sessions.pickle"
-TOKEN_PATH = f"{CWD}/usertoken.pickle"
 FILENAME = f"report-{date.today().strftime('%d-%b-%Y')}.html"
 OUTPUT_PATH = f"{CWD}/{FILENAME}"
 TENBIS_FQDN = "https://www.10bis.co.il"
-DEBUG = False
-HTML_ROW_TEMPLATE = """
-    <tr>  <td>{counter}</td>  <td>{store}</td>   <td>{order_date}</td>   <td>{barcode_number}</td>   <td style="text-align:center;"><img onclick="togglehideshow(this)" src='{barcode_img_url}'></td>   <td>{amount}</td>   <td>{valid_date}</br></br></td></tr>
-    """
-HTML_PAGE_TEMPLATE = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <script>
-            function togglehideshow(element) {{
-                 element.style.opacity= element.style.opacity * -1; 
-            }}
-
-            function hideall() {{
-            	var elems = document.getElementsByTagName('img');
-                for (var i = 0; i < elems.length; i++) {{
-                    elems[i].style.opacity = -1;
-                }}
-            }}
-
-            function showall() {{
-            	var elems = document.getElementsByTagName('img');
-                for (var i = 0; i < elems.length; i++) {{
-                    elems[i].style.opacity = 1;
-                }}
-            }}
-
-        </script>
-        <style>
-        button {{
-        background-color: #43b17d; /* Green */
-        border: none;
-        padding: 20px;
-        width: 48%;
-        margin: 1%;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 12px;
-      	}}
-        #barcodes {{
-        font-family: Arial, Helvetica, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-        }}
-
-        img {{
-        opacity: 1
-        }}
-        #barcodes td, #barcodes th {{
-        border: 1px solid #ddd;
-        padding: 8px;
-        }}
-        #barcodes tr:nth-child(even){{
-        background-color: #f2f2f2;}}
-        #barcodes tr:hover {{background-color: #ddd;}}
-        #barcodes th {{
-        padding-top: 12px;
-        padding-bottom: 12px;
-        vertical-align: top;
-        text-align: center;
-        background-color: #04AA6D;
-        color: white;
-        }}
-        </style>
-        </head>
-        <body>
-            <h1> Non used barcodes </h1>
-            <table id="barcodes">
-            <tr> <th>Item number</th> <th>Store</th>  <th>Order date</th>   <th>Barcode number</th>   <th>Barcode image</br><button onclick="showall()">Show all</button><button onclick="hideall()">Hide all</button></th>   <th>Amount</th>   <th>Expiration date</th>
-            {output_table}
-            </table>
-        </body>
-        </html>
-    """
 
 
 def main_procedure(session):
-    create_pickle(session, SESSION_PATH)
     shovarim = []
     count = 0
     years_to_check = -12
@@ -119,11 +39,6 @@ def main_procedure(session):
         return shovarim
     else:
         return None
-
-
-def create_pickle(obj, path):
-    with open(path, 'wb') as session_file:
-        pickle.dump(obj, session_file)
 
 
 def get_report_for_month(session, month):
@@ -186,7 +101,6 @@ def auth_otp(email, headers, resp_json, session, otp):
     response = session.post(endpoint, data=json.dumps(payload), headers=headers, verify=False)
     resp_json = json.loads(response.text)
     user_token = resp_json['Data']['userToken']
-    create_pickle(user_token, TOKEN_PATH)
     session.user_token = user_token
 
     return session

@@ -51,7 +51,7 @@ def coupons_sum(coupons):
     sum_coupons = 0
     for key, value in coupons.items():
         for _ in range(value):
-            sum_coupons += float(key)
+            sum_coupons += int(key)
     return sum_coupons
 
 
