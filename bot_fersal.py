@@ -145,7 +145,7 @@ def otp_handler(call, email, headers, resp_json, session, original_call):
     string = "מתוך השוברים שסרקתי, השוברים הבאים כבר שמורים אצלי:" + "\n"
     str_len = len(string)
     if otp.isdigit() and len(otp) == 5:
-        scanning_message = bot.send_message(original_call.message.chat.id, "סורק...")
+        scanning_message = bot.send_message(original_call.message.chat.id, "סורק 🧐")
         session = tenbis_report.auth_otp(email, headers, resp_json, session, otp)
         ten_bis = tenbis_report.main_procedure(session)
         for shovar in ten_bis:
