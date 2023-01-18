@@ -20,7 +20,7 @@ global_shovar = []
 @bot.message_handler(commands=['תפריט'])
 def handle_command_adminwindow(message):
     bot.send_message(chat_id=message.chat.id,
-                     text="תפריט ראשי",
+                     text="BotFersal",
                      reply_markup=menu.menu(),
                      parse_mode='HTML')
 
@@ -67,7 +67,7 @@ def handle_query(call):
         delete_barcode_message(call)
     if call.data.startswith("Back"):
         bot.edit_message_text(chat_id=call.message.chat.id,
-                              text="תפריט ראשי",
+                              text="BotFersal",
                               message_id=call.message.message_id,
                               reply_markup=menu.menu(),
                               parse_mode='HTML')
