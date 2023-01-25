@@ -19,10 +19,11 @@ global_shovar = []
 
 @bot.message_handler(commands=['תפריט'])
 def handle_command_adminwindow(message):
-    bot.send_message(chat_id=message.chat.id,
-                     text="BotFersal",
-                     reply_markup=menu.menu(),
-                     parse_mode='HTML')
+    if message.from_user.username == appSet.user_name:
+        bot.send_message(chat_id=message.chat.id,
+                         text="BotFersal",
+                         reply_markup=menu.menu(),
+                         parse_mode='HTML')
 
 
 @bot.callback_query_handler(func=lambda call: True)
