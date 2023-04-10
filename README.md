@@ -23,7 +23,7 @@ To activate the bot, you'll need to change four values in the "appSettings.py" f
 2. Start a conversation with the BotFather bot by sending the message "/start".
 3. Send the BotFather bot the command "/newbot" to create a new bot.
 4. Follow the prompts to choose a name and username for your new bot. Once you've chosen a username that's not already taken, the BotFather will provide you with an API token for your bot.
-5. Copy the API token and paste it into the TELEGRAM_TOKEN variable in the "appSettings.py" file in the BotFersal repository.
+5. Copy the API token and paste it into the *botToken* variable in the "appSettings.py" file in the BotFersal repository.
 
 ## _mongo_connection_string_
 1. Go to the [MongoDB](https://www.mongodb.com/) website and click on the “Try Free” button in the top right corner of the homepage.
