@@ -60,7 +60,11 @@ sudo docker run -d --name bot_fersal -it python:bot_fersal
 ```
 
 
+## License
 
+MIT
+
+**Enjoy!**
 
 
 
