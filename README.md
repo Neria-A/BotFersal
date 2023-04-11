@@ -18,14 +18,14 @@ To activate the bot, you'll need to change four values in the "appSettings.py" f
 
 ## Make sure to update these values with your own information before running the bot.
 
-## _botToken_
+## botToken
 1. Open Telegram and search for the BotFather bot.
 2. Start a conversation with the BotFather bot by sending the message "/start".
 3. Send the BotFather bot the command "/newbot" to create a new bot.
 4. Follow the prompts to choose a name and username for your new bot. Once you've chosen a username that's not already taken, the BotFather will provide you with an API token for your bot.
 5. Copy the API token and paste it into the *botToken* variable in the "appSettings.py" file in the BotFersal repository.
 
-## _mongo_connection_string_
+## mongo_connection_string
 1. Go to the [MongoDB](https://www.mongodb.com/) website and click on the “Try Free” button in the top right corner of the homepage.
 2. Fill in your details to create a new account, including your name, email address, and password. You can also sign up with your Google or GitHub account if you prefer.
 3. After signing up, you’ll be directed to the dashboard. From there, click on the “Create a New Project” button to create a new project.
@@ -36,5 +36,32 @@ To activate the bot, you'll need to change four values in the "appSettings.py" f
 8. Once your cluster is created, click on the “Connect” button.
 9. Select “Connect Your Application” to get the connection string.
 10. Choose your driver and version, and copy the connection string to use in your application.
+
+## dockerfile
+The Dockerfile in the BotFersal repository can be used to create a Docker container for the Telegram bot. To create a container, follow these steps:
+
+1. Install Docker on your server if it is not already installed.
+2. Clone the BotFersal repository to your server.
+3. Open the "dockerfile" in your preferred code editor.
+**LABEL Maintainer** insert your name.
+**WORKDIR** and **ENV PYTHONPATH** insert directory path.
+4. Save and close the "dockerfile" file.
+5. Open "appSettings.py" and update the four values (**botToken**, **mongo_connection_string**, **ten_bis_mail**, **user_name**)
+6. Save and close the "appSettings.py" file.
+
+7. If you are using a Linux server, navigate to the directory containing the Dockerfile and run the following command to build the Docker image:
+
+```sh
+sudo docker image build -t python:bot_fersal <directory path>
+```
+8. Once the Docker image is built, you can run a Docker container using the following command:
+```sh
+sudo docker run -d --name expense_bot -it python:bot_fersal
+```
+
+
+
+
+
 
 
