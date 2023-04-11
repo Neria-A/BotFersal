@@ -56,7 +56,7 @@ sudo docker image build -t python:bot_fersal <directory path>
 ```
 8. Once the Docker image is built, you can run a Docker container using the following command:
 ```sh
-sudo docker run -d --name expense_bot -it python:bot_fersal
+sudo docker run -d --name bot_fersal -it python:bot_fersal
 ```
 
 
