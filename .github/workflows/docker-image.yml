@@ -23,7 +23,7 @@ jobs:
           sed -i "s/REPLACE_WITH_MONGO_CONNECTION_STRING/${{ secrets.mongo_connection_string }}/g" /home/orangepi/BotFersal/appSettings.py
           sed -i "s/REPLACE_WITH_TEN_BIS_MAIL/${{ secrets.ten_bis_mail }}/g" /home/orangepi/BotFersal/appSettings.py
           sed -i "s/REPLACE_WITH_USER_NAME/${{ secrets.user_name }}/g" /home/orangepi/BotFersal/appSettings.py
-          
+
       - name: Check container_last_id
         run: |
           cd /home/orangepi/expense_bot/ExpenseBot
