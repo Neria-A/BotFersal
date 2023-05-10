@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Pull new Master
         run: |
-          cd /home/ubuntu/BotFersal
+          cd /home/orangepi/BotFersal
           git pull
 
       - name: Set secrets in appSetting.py
