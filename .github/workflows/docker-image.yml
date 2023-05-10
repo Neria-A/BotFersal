@@ -17,7 +17,7 @@ jobs:
       - name: Pull new Master
         run: |
           cd /home/orangepi/BotFersal
-          git pull
+          git pull https://github.com/galoiring/BotFersal.git
 
       - name: Set secrets in appSetting.py
         run: |
