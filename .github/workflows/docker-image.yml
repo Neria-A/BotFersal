@@ -17,12 +17,12 @@ jobs:
           cd /home/orangepi/BotFersal
           git pull
 
-      - name: Set secrets in appSetting.py
+      - name: Set secrets in appSettings.py
         run: |
-          sed -i "s/REPLACE_WITH_BOT_TOKEN/${{ secrets.botToken }}/g" /home/orangepi/BotFersal/appSetting.py
-          sed -i "s/REPLACE_WITH_MONGO_CONNECTION_STRING/${{ secrets.mongo_connection_string }}/g" /home/orangepi/BotFersal/appSetting.py
-          sed -i "s/REPLACE_WITH_TEN_BIS_MAIL/${{ secrets.ten_bis_mail }}/g" /home/orangepi/BotFersal/appSetting.py
-          sed -i "s/REPLACE_WITH_USER_NAME/${{ secrets.user_name }}/g" /home/orangepi/BotFersal/appSetting.py
+          sed -i "s/REPLACE_WITH_BOT_TOKEN/${{ secrets.botToken }}/g" /home/orangepi/BotFersal/appSettings.py
+          sed -i "s/REPLACE_WITH_MONGO_CONNECTION_STRING/${{ secrets.mongo_connection_string }}/g" /home/orangepi/BotFersal/appSettings.py
+          sed -i "s/REPLACE_WITH_TEN_BIS_MAIL/${{ secrets.ten_bis_mail }}/g" /home/orangepi/BotFersal/appSettings.py
+          sed -i "s/REPLACE_WITH_USER_NAME/${{ secrets.user_name }}/g" /home/orangepi/BotFersal/appSettings.py
 
       - name: Check container_last_id
         run: |
