@@ -19,6 +19,7 @@ global_shovar = []
 @bot.message_handler(commands=['תפריט'])
 def handle_command_adminwindow(message):
     if message.from_user.username in appSet.user_name:
+        print(f'answering to user: {message.from_user.username}')
         bot.send_message(chat_id=message.chat.id,
                          text="BotFersal",
                          reply_markup=menu.menu(),
@@ -120,6 +121,7 @@ def delete_barcode_message(call):
     for message_id in barcode_ids[call.message.chat.id]:
         bot.delete_message(call.message.chat.id, message_id)
     barcode_ids.clear()
+
 
 def ten_bis_api(call):
     sent_msg = bot.send_message(call.message.chat.id, "יש להכניס את קוד האימות שקיבלת כעת")
