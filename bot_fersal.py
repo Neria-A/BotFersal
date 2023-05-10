@@ -16,7 +16,6 @@ message_ids = {}
 barcode_ids = {}
 global_shovar = []
 
-
 @bot.message_handler(commands=['תפריט'])
 def handle_command_adminwindow(message):
     if message.from_user.username in appSet.user_name:
