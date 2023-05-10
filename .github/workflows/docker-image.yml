@@ -19,14 +19,14 @@ jobs:
 
       - name: Set secrets in appSetting.py
         run: |
-          sed -i "s/REPLACE_WITH_BOT_TOKEN/${{ secrets.botToken }}/g" /home/ubuntu/BotFersal/appSetting.py
-          sed -i "s/REPLACE_WITH_MONGO_CONNECTION_STRING/${{ secrets.mongo_connection_string }}/g" /home/ubuntu/BotFersal/appSetting.py
-          sed -i "s/REPLACE_WITH_TEN_BIS_MAIL/${{ secrets.ten_bis_mail }}/g" /home/ubuntu/BotFersal/appSetting.py
-          sed -i "s/REPLACE_WITH_USER_NAME/${{ secrets.user_name }}/g" /home/ubuntu/BotFersal/appSetting.py
+          sed -i "s/REPLACE_WITH_BOT_TOKEN/${{ secrets.botToken }}/g" /home/orangepi/BotFersal/appSetting.py
+          sed -i "s/REPLACE_WITH_MONGO_CONNECTION_STRING/${{ secrets.mongo_connection_string }}/g" /home/orangepi/BotFersal/appSetting.py
+          sed -i "s/REPLACE_WITH_TEN_BIS_MAIL/${{ secrets.ten_bis_mail }}/g" /home/orangepi/BotFersal/appSetting.py
+          sed -i "s/REPLACE_WITH_USER_NAME/${{ secrets.user_name }}/g" /home/orangepi/BotFersal/appSetting.py
 
       - name: Check container_last_id
         run: |
-          cd /home/ubuntu/expense_bot/ExpenseBot
+          cd /home/orangepi/expense_bot/ExpenseBot
           if [ -f container_last_id.txt ]; then
             cat container_last_id.txt | xargs -t sudo docker stop
             cat container_last_id.txt | xargs -t sudo docker rm -f
@@ -44,12 +44,12 @@ jobs:
           fi
 
       - name: Build docker image
-        run: sudo docker image build -t python:bot_fersal /home/ubuntu/BotFersal
+        run: sudo docker image build -t python:bot_fersal /home/orangepi/BotFersal
 
       - name: Run docker
         run: sudo docker run -d --name expense_bot -it python:bot_fersal
 
       - name: Log docker ID
         run: |
-          cd /home/ubuntu/BotFersal
+          cd /home/orangepi/BotFersal
           sudo docker ps -q -f name=bot_fersal > container_last_id.txt
