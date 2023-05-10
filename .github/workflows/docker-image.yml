@@ -37,7 +37,7 @@ jobs:
         run: sudo docker image build -t python:bot_fersal /home/orangepi/BotFersal
 
       - name: Run docker
-        run: sudo docker run -d --name expense_bot -it python:bot_fersal
+        run: sudo docker run -d -it python:bot_fersal
 
       - name: Log docker ID
         run: |
