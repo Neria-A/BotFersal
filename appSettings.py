@@ -1,4 +1,4 @@
-botToken = "insert telegram bot token"
-mongo_connection_string = 'insert mongoDB connection string'
-ten_bis_mail = "insert your email address"
-user_name = "insert your telegram user_name"
+botToken = 'REPLACE_WITH_BOT_TOKEN'
+mongo_connection_string = 'REPLACE_WITH_MONGO_CONNECTION_STRING'
+ten_bis_mail = 'REPLACE_WITH_TEN_BIS_MAIL'
+user_name = 'REPLACE_WITH_USER_NAME'
