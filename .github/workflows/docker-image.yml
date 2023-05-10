@@ -23,6 +23,16 @@ jobs:
           sed -i "s|REPLACE_WITH_MONGO_CONNECTION_STRING|${{ secrets.mongo_connection_string }}|g" /home/orangepi/BotFersal/appSettings.py
           sed -i "s|REPLACE_WITH_TEN_BIS_MAIL|${{ secrets.ten_bis_mail }}|g" /home/orangepi/BotFersal/appSettings.py
           sed -i "s|REPLACE_WITH_USER_NAME|${{ secrets.user_name }}|g" /home/orangepi/BotFersal/appSettings.py
+   
+      - name: Check container_last_id
+          run: |
+            cd /home/orangepi/BotFersal
+            if cat container_last_id.txt ; then
+              cat container_last_id.txt | xargs -t sudo docker stop
+              cat container_last_id.txt | xargs -t sudo docker rm -f 
+            else
+              echo "this will be the first container"
+            fi
 
       - name: Remove python:bot_fersal
         run: |
@@ -37,7 +47,7 @@ jobs:
         run: sudo docker image build -t python:bot_fersal /home/orangepi/BotFersal
 
       - name: Run docker
-        run: sudo docker run -d -it python:bot_fersal
+        run: sudo docker run -d -it --name bot_fersal python:bot_fersal
 
       - name: Log docker ID
         run: |
