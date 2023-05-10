@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: ORANGE PI Docker Image CI 
 
 on:
   #push:
