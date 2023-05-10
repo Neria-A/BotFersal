@@ -19,7 +19,7 @@ global_shovar = []
 
 @bot.message_handler(commands=['תפריט'])
 def handle_command_adminwindow(message):
-    if message.from_user.username == appSet.user_name:
+    if message.from_user.username in appSet.user_name:
         bot.send_message(chat_id=message.chat.id,
                          text="BotFersal",
                          reply_markup=menu.menu(),
