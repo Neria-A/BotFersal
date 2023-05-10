@@ -1,16 +1,14 @@
-name: ORANGE PI Docker Image CI 
+name: ORANGE PI Docker Image CI
 
 on:
-  #push:
-    #branches: [ "master" ]
-  #pull_request:
-    #branches: [ "master" ]
-  #For manual run
+  # push:
+  #   branches: [ "master" ]
+  # pull_request:
+  #   branches: [ "master" ]
   workflow_dispatch:
-jobs:
 
+jobs:
   build:
-  
     runs-on: self-hosted
 
     steps:
@@ -19,7 +17,7 @@ jobs:
           cd /home/orangepi/BotFersal
           git pull
 
-     - name: Set secrets in appSettings.py
+      - name: Set secrets in appSettings.py
         run: |
           sed -i "s|REPLACE_WITH_BOT_TOKEN|${{ secrets.botToken }}|g" /home/orangepi/BotFersal/appSettings.py
           sed -i "s|REPLACE_WITH_MONGO_CONNECTION_STRING|${{ secrets.mongo_connection_string }}|g" /home/orangepi/BotFersal/appSettings.py
