@@ -18,7 +18,7 @@ global_shovar = []
 
 @bot.message_handler(commands=['תפריט'])
 def handle_command_adminwindow(message):
-    print(f'Users: {appSet.user_name}')
+    print(f'All Users: {appSet.user_name}')
     if message.from_user.username in appSet.user_name:
         print(f'Answering to user: {message.from_user.username}')
         bot.send_message(chat_id=message.chat.id,
