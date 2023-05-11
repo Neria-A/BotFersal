@@ -19,7 +19,6 @@ jobs:
 
       - name: Set secrets in appSettings.py
         run: |
-          echo "user_name secret value: ${{ secrets.user_name }}"
           sed -i "s|REPLACE_WITH_BOT_TOKEN|${{ secrets.botToken }}|g" /home/orangepi/BotFersal/appSettings.py
           sed -i "s|REPLACE_WITH_MONGO_CONNECTION_STRING|${{ secrets.mongo_connection_string }}|g" /home/orangepi/BotFersal/appSettings.py
           sed -i "s|REPLACE_WITH_TEN_BIS_MAIL|${{ secrets.ten_bis_mail }}|g" /home/orangepi/BotFersal/appSettings.py
