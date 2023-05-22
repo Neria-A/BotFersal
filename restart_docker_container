@@ -1,0 +1,12 @@
+name: Restart Docker Container
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    - name: restart container
+      run: |
+         sudo docker container restart expense_bot
