@@ -19,10 +19,11 @@ def coupon_menu(result):
     fifty = (types.InlineKeyboardButton(text="50" + " x " + str(result.get("50")), callback_data="fifty"))
     forty = (types.InlineKeyboardButton(text="40" + " x " + str(result.get("40")), callback_data="forty"))
     thirty = (types.InlineKeyboardButton(text="30"  + " x " + str(result.get("30")), callback_data="thirty"))
+    fifteen = (types.InlineKeyboardButton(text="15" + " x " + str(result.get("15")), callback_data="fifteen"))
     back = (types.InlineKeyboardButton(text="חזרה", callback_data="Back"))
     refresh = (types.InlineKeyboardButton(text="רענן שוברים", callback_data="refresh"))
-    markup.row(two_hundred, hundred)
-    markup.row(fifty, forty, thirty)
+    markup.row(two_hundred, hundred, fifty)
+    markup.row(forty, thirty, fifteen)
     markup.row(refresh)
     markup.row(back)
     return markup

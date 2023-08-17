@@ -55,6 +55,9 @@ def handle_query(call):
     if call.data.startswith("thirty"):
         barcode = mongo.find_barcode("30")
         find_or_not(barcode, call, local_shovar, 30)
+    if call.data.startswith("fifteen"):
+        barcode = mongo.find_barcode("15")
+        find_or_not(barcode, call, local_shovar, 15)
     if call.data.startswith("Used"):
         if global_shovar[:1] != None:
             mongo.update_db(global_shovar[0])
