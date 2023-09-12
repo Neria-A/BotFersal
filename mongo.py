@@ -4,7 +4,7 @@ import appSettings as appsec
 from pymongo import MongoClient
 from ShovarFromMongo import ShovarFromMongo
 
-amounts = ['30', '40', '50', '100', '200']
+amounts = ['15', '30', '40', '50', '100', '200']
 
 
 client = MongoClient(appsec.mongo_connection_string)
